@@ -2,8 +2,9 @@ import { useState } from "react";
 import { FileUploadZone } from "@/components/FileUploadZone";
 import { readExcelFile, readWordTemplate, generateMissionOrders, MissionData } from "@/lib/docGenerator";
 import { Button } from "@/components/ui/button";
-import { Download, Loader2, FileStack, AlertCircle } from "lucide-react";
+import { Download, Loader2, FileStack, AlertCircle, Info } from "lucide-react";
 import { toast } from "sonner";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Index = () => {
   const [wordFile, setWordFile] = useState<File | null>(null);
@@ -14,12 +15,19 @@ const Index = () => {
 
   const handleExcelSelect = async (file: File) => {
     setExcelFile(file);
+    setPreviewLoaded(false);
     try {
       const data = await readExcelFile(file);
+      console.log("Données Excel chargées:", data);
       setMissions(data);
       setPreviewLoaded(true);
-      toast.success(`${data.length} mission(s) détectée(s) dans le fichier.`);
-    } catch {
+      if (data.length === 0) {
+        toast.warning("Aucune donnée trouvée dans le fichier Excel.");
+      } else {
+        toast.success(`${data.length} mission(s) détectée(s) dans le fichier.`);
+      }
+    } catch (error) {
+      console.error("Erreur lecture Excel:", error);
       toast.error("Erreur lors de la lecture du fichier Excel.");
       setMissions([]);
       setPreviewLoaded(false);
@@ -30,12 +38,14 @@ const Index = () => {
     if (!wordFile || missions.length === 0) return;
     setIsGenerating(true);
     try {
+      console.log("Début de génération avec les colonnes:", Object.keys(missions[0]));
       const templateBuffer = await readWordTemplate(wordFile);
       await generateMissionOrders(templateBuffer, missions);
       toast.success(`${missions.length} ordre(s) de mission généré(s) avec succès !`);
     } catch (err) {
-      console.error(err);
-      toast.error("Erreur lors de la génération des documents.");
+      console.error("Erreur génération:", err);
+      const errorMsg = err instanceof Error ? err.message : "Erreur lors de la génération des documents.";
+      toast.error(errorMsg);
     } finally {
       setIsGenerating(false);
     }
@@ -89,35 +99,62 @@ const Index = () => {
           {previewLoaded && missions.length > 0 && (
             <section className="animate-in fade-in slide-in-from-bottom-4 duration-300">
               <h2 className="text-lg font-semibold text-foreground mb-1">2. Aperçu des données</h2>
-              <p className="text-sm text-muted-foreground mb-4">{missions.length} ordre(s) de mission à générer.</p>
+              <p className="text-sm text-muted-foreground mb-4">
+                {missions.length} ordre(s) de mission à générer
+              </p>
+              
+              <Alert className="mb-4">
+                <Info className="h-4 w-4" />
+                <AlertDescription className="text-sm">
+                  <strong>Placeholders disponibles pour votre fichier Word :</strong>
+                  <div className="mt-2 font-mono text-xs bg-muted/50 p-2 rounded">
+                    {"{Nom}"}, {"{Prenoms}"}, {"{Date départ}"}, {"{Date arrivée}"}, {"{Itineraire}"}
+                  </div>
+                  <div className="text-muted-foreground mt-2 text-xs">
+                    💡 Vous pouvez aussi utiliser : {"{Le (départ)}"}, {"{Le (retour)}"}, {"{Date de départ}"}, {"{Date de retour}"}
+                  </div>
+                </AlertDescription>
+              </Alert>
+
               <div className="border rounded-xl overflow-hidden bg-card">
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto max-h-[500px] overflow-y-auto">
                   <table className="w-full text-sm">
-                    <thead>
-                      <tr className="bg-muted/60">
-                        <th className="text-left px-4 py-3 font-semibold text-muted-foreground">#</th>
-                        {Object.keys(missions[0]).map((key) => (
-                          <th key={key} className="text-left px-4 py-3 font-semibold text-muted-foreground whitespace-nowrap">{key}</th>
-                        ))}
+                    <thead className="sticky top-0 bg-muted/80 backdrop-blur-sm z-10">
+                      <tr>
+                        <th className="text-left px-4 py-3 font-semibold text-muted-foreground border-b">#</th>
+                        <th className="text-left px-4 py-3 font-semibold text-muted-foreground border-b">Nom</th>
+                        <th className="text-left px-4 py-3 font-semibold text-muted-foreground border-b">Prénoms</th>
+                        <th className="text-left px-4 py-3 font-semibold text-muted-foreground border-b">Date départ</th>
+                        <th className="text-left px-4 py-3 font-semibold text-muted-foreground border-b">Date arrivée</th>
+                        <th className="text-left px-4 py-3 font-semibold text-muted-foreground border-b">De</th>
+                        <th className="text-left px-4 py-3 font-semibold text-muted-foreground border-b">À</th>
+                        <th className="text-left px-4 py-3 font-semibold text-muted-foreground border-b">Escales aller</th>
+                        <th className="text-left px-4 py-3 font-semibold text-muted-foreground border-b">Escales retour</th>
+                        <th className="text-left px-4 py-3 font-semibold text-muted-foreground border-b">Itinéraire</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {missions.slice(0, 10).map((m, i) => (
+                      {missions.map((m, i) => (
                         <tr key={i} className="border-t hover:bg-muted/30 transition-colors">
-                          <td className="px-4 py-2.5 text-muted-foreground">{i + 1}</td>
-                          {Object.values(m).map((v, j) => (
-                            <td key={j} className="px-4 py-2.5 whitespace-nowrap">{v}</td>
-                          ))}
+                          <td className="px-4 py-2.5 text-muted-foreground font-medium">{i + 1}</td>
+                          <td className="px-4 py-2.5">{m.Nom || <span className="text-muted-foreground italic">vide</span>}</td>
+                          <td className="px-4 py-2.5">{m.Prenoms || <span className="text-muted-foreground italic">vide</span>}</td>
+                          <td className="px-4 py-2.5 whitespace-nowrap">{m["Date départ"] || <span className="text-muted-foreground italic">vide</span>}</td>
+                          <td className="px-4 py-2.5 whitespace-nowrap">{m["Date arrivée"] || <span className="text-muted-foreground italic">vide</span>}</td>
+                          <td className="px-4 py-2.5">{m["Ville de départ"] || <span className="text-muted-foreground italic">-</span>}</td>
+                          <td className="px-4 py-2.5">{m["Ville d'arrivée"] || <span className="text-muted-foreground italic">-</span>}</td>
+                          <td className="px-4 py-2.5">{m["Escales aller"] || <span className="text-muted-foreground italic">-</span>}</td>
+                          <td className="px-4 py-2.5">{m["Escales retour"] || <span className="text-muted-foreground italic">-</span>}</td>
+                          <td className="px-4 py-2.5">{m.Itineraire || <span className="text-muted-foreground italic">vide</span>}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
-                {missions.length > 10 && (
-                  <div className="px-4 py-2 text-sm text-muted-foreground border-t bg-muted/30">
-                    … et {missions.length - 10} ligne(s) supplémentaire(s)
-                  </div>
-                )}
+                <div className="px-4 py-2 text-xs text-muted-foreground border-t bg-muted/30 flex justify-between items-center">
+                  <span>Total: {missions.length} ligne(s)</span>
+                  <span>Colonnes affichées: 10 (avec analyse d'itinéraire)</span>
+                </div>
               </div>
             </section>
           )}
