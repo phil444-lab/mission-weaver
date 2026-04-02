@@ -1,0 +1,139 @@
+═══════════════════════════════════════════════════════════════
+  INSTRUCTIONS POUR DÉPLOYER SUR RENDER
+═══════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 1: Pousser les fichiers sur GitHub
+───────────────────────────────────────────────────────────────
+Exécutez ces commandes dans le terminal:
+
+git add .
+git commit -m "Ajout configuration Render et documentation"
+git push origin main
+
+
+📋 ÉTAPE 2: Créer un compte Render
+───────────────────────────────────────────────────────────────
+1. Allez sur: https://render.com
+2. Cliquez sur "Get Started" ou "Sign Up"
+3. Connectez-vous avec votre compte GitHub
+
+
+📋 ÉTAPE 3: Choisir le type de déploiement
+───────────────────────────────────────────────────────────────
+
+OPTION 1 - Static Site (RECOMMANDÉ - GRATUIT)
+  ✓ Gratuit
+  ✓ Plus rapide (CDN)
+  ✓ Pas de serveur nécessaire
+
+OPTION 2 - Web Service (avec serveur Node.js)
+  ⚠ Payant après 750h/mois
+  ✓ Plus de contrôle
+  ✓ Peut ajouter des APIs backend
+
+
+📋 ÉTAPE 4A: Configuration Static Site (GRATUIT)
+───────────────────────────────────────────────────────────────
+1. Dans le dashboard Render, cliquez sur "New +"
+2. Sélectionnez "Static Site"
+3. Autorisez Render à accéder à vos dépôts GitHub
+4. Sélectionnez le dépôt: phil444-lab/mission-weaver
+
+Remplissez le formulaire:
+
+┌─────────────────────────────────────────────────────────────┐
+│ Name:                                                       │
+│   mission-weaver                                            │
+│                                                             │
+│ Branch:                                                     │
+│   main                                                      │
+│                                                             │
+│ Build Command:                                              │
+│   npm install && npm run build                              │
+│                                                             │
+│ Publish Directory:                                          │
+│   dist                                                      │
+│                                                             │
+│ Start Command:                                              │
+│   (laisser vide - pas nécessaire)                           │
+│                                                             │
+│ Auto-Deploy:                                                │
+│   ✓ Yes (coché)                                             │
+└─────────────────────────────────────────────────────────────┘
+
+
+📋 ÉTAPE 4B: Configuration Web Service (ALTERNATIVE)
+───────────────────────────────────────────────────────────────
+1. Dans le dashboard Render, cliquez sur "New +"
+2. Sélectionnez "Web Service"
+3. Autorisez Render à accéder à vos dépôts GitHub
+4. Sélectionnez le dépôt: phil444-lab/mission-weaver
+
+Remplissez le formulaire:
+
+┌─────────────────────────────────────────────────────────────┐
+│ Name:                                                       │
+│   mission-weaver                                            │
+│                                                             │
+│ Branch:                                                     │
+│   main                                                      │
+│                                                             │
+│ Runtime:                                                    │
+│   Node                                                      │
+│                                                             │
+│ Build Command:                                              │
+│   npm install && npm run build                              │
+│                                                             │
+│ Start Command:                                              │
+│   npm start                                                 │
+│                                                             │
+│ Auto-Deploy:                                                │
+│   ✓ Yes (coché)                                             │
+└─────────────────────────────────────────────────────────────┘
+
+
+📋 ÉTAPE 5: Créer le site
+───────────────────────────────────────────────────────────────
+1. Cliquez sur "Create Static Site"
+2. Attendez que le déploiement se termine (2-5 minutes)
+3. Render va:
+   ✓ Cloner votre dépôt
+   ✓ Installer les dépendances (npm install)
+   ✓ Builder le projet (npm run build)
+   ✓ Déployer le contenu du dossier dist/
+
+
+📋 ÉTAPE 6: Accéder à votre application
+───────────────────────────────────────────────────────────────
+Une fois le déploiement terminé:
+1. Vous verrez un message "Your site is live!"
+2. L'URL sera du type: https://mission-weaver.onrender.com
+3. Cliquez sur l'URL pour ouvrir votre application
+
+
+✅ TERMINÉ!
+───────────────────────────────────────────────────────────────
+Votre application est maintenant en ligne!
+
+Chaque fois que vous poussez sur GitHub (git push), 
+Render redéploiera automatiquement votre application.
+
+
+🔧 DÉPANNAGE
+───────────────────────────────────────────────────────────────
+Si le build échoue:
+- Vérifiez les logs dans l'onglet "Logs" sur Render
+- Vérifiez que package.json et package-lock.json sont à jour
+- Testez le build localement: npm run build
+
+Si les routes ne fonctionnent pas (erreur 404):
+- Le fichier render.yaml devrait gérer ça automatiquement
+- Sinon, allez dans Settings > Redirects/Rewrites
+- Ajoutez: Source: /* → Destination: /index.html (Rewrite)
+
+
+📚 DOCUMENTATION COMPLÈTE
+───────────────────────────────────────────────────────────────
+Voir le fichier DEPLOY_RENDER.md pour plus de détails.
+
+═══════════════════════════════════════════════════════════════

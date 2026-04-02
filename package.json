@@ -9,6 +9,7 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
+    "start": "node server.js",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -48,6 +49,7 @@
     "date-fns": "^3.6.0",
     "docxtemplater": "^3.68.3",
     "embla-carousel-react": "^8.6.0",
+    "express": "^5.2.1",
     "file-saver": "^2.0.5",
     "input-otp": "^1.4.2",
     "jszip": "^3.10.1",
