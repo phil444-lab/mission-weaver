@@ -527,9 +527,11 @@ export async function generateMissionOrders(
 
       const output = doc.getZip().generate({ type: "uint8array" });
 
-      // Nom de fichier simple et numéroté selon l'ordre du fichier Excel
-      const numeroOM = String(i + 1).padStart(3, '0'); // OM001, OM002, etc.
-      const filename = `OM${numeroOM}.docx`;
+      // Utiliser le numéro de la colonne "N°" du fichier Excel
+      const numeroExcel = smartData["N°"] || smartData.N || String(i + 1);
+      const filename = `OM${numeroExcel}.docx`;
+
+      console.log(`Génération: ${filename} pour ${smartData.Nom} ${smartData.Prenoms}`);
 
       zip.file(filename, output);
       successCount++;
