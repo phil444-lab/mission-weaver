@@ -527,10 +527,9 @@ export async function generateMissionOrders(
 
       const output = doc.getZip().generate({ type: "uint8array" });
 
-      const nom = sanitizeFilename(smartData.Nom || smartData.NOM || "Inconnu");
-      const prenoms = sanitizeFilename(smartData.Prenoms || smartData.PRENOMS || "");
-      const dateDepart = sanitizeFilename(smartData["Le (départ)"] || smartData["Date "] || smartData.Date || "");
-      const filename = `Ordre_Mission_${nom}_${prenoms}_${dateDepart}.docx`;
+      // Nom de fichier simple et numéroté selon l'ordre du fichier Excel
+      const numeroOM = String(i + 1).padStart(3, '0'); // OM001, OM002, etc.
+      const filename = `OM${numeroOM}.docx`;
 
       zip.file(filename, output);
       successCount++;
