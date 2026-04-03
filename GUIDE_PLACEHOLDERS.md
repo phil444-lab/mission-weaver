@@ -28,8 +28,8 @@ L'application lit automatiquement ces informations de votre fichier Excel et les
 - `{Itineraire}` - Itinéraire complet (ex: Paris → Cotonou → Dubai → Paris)
 - `{Ville de départ}` ou `{Ville de depart}` ou `{De}` ou `{Départ}` - Ville de départ
 - `{Ville d'arrivée}` ou `{Ville arrivée}` ou `{A}` ou `{Arrivée}` - Ville d'arrivée
-- `{Escales aller}` - Escales à l'aller
-- `{Escales retour}` - Escales au retour
+- `{Escales aller}` - Itinéraire aller complet (ex: "Cotonou → Istanbul → Dubai")
+- `{Escales retour}` - Itinéraire retour complet (ex: "Dubai → Istanbul → Cotonou")
 - `{Itinéraire aller}` ou `{Itineraire aller}` - Trajet aller uniquement
 - `{Itinéraire retour}` ou `{Itineraire retour}` - Trajet retour uniquement
 

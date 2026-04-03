@@ -322,8 +322,12 @@ export function readExcelFile(file: File): Promise<MissionData[]> {
             // Ajouter les informations d'analyse
             "Ville de départ": analyse.villeDepart,
             "Ville d'arrivée": analyse.villeArrivee,
-            "Escales aller": analyse.escalesAller,
-            "Escales retour": analyse.escalesRetour,
+            "Escales aller": analyse.itineraireAller,
+            "Escales retour": analyse.itineraireRetour,
+            "Itinéraire aller": analyse.itineraireAller,
+            "Itineraire aller": analyse.itineraireAller,
+            "Itinéraire retour": analyse.itineraireRetour,
+            "Itineraire retour": analyse.itineraireRetour,
             // Garder aussi les colonnes originales
             ...row
           };
@@ -479,8 +483,8 @@ function createSmartMapping(excelData: Record<string, any>): Record<string, stri
   mapped["Ville d'arrivee"] = itineraireAnalyse.villeArrivee;
   mapped["Ville arrivée"] = itineraireAnalyse.villeArrivee;
   mapped["Ville arrivee"] = itineraireAnalyse.villeArrivee;
-  mapped["Escales aller"] = itineraireAnalyse.escalesAller;
-  mapped["Escales retour"] = itineraireAnalyse.escalesRetour;
+  mapped["Escales aller"] = itineraireAnalyse.itineraireAller;
+  mapped["Escales retour"] = itineraireAnalyse.itineraireRetour;
   mapped["Itinéraire aller"] = itineraireAnalyse.itineraireAller;
   mapped["Itineraire aller"] = itineraireAnalyse.itineraireAller;
   mapped["Itinéraire retour"] = itineraireAnalyse.itineraireRetour;
