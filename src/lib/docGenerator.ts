@@ -258,8 +258,8 @@ export function readExcelFile(file: File): Promise<MissionData[]> {
           
           console.log(`Itinéraire brut pour ${row.NOM} ${row.PRENOMS} (${itineraireSteps.length} villes):`, itineraireSteps);
           
-          // Construire l'itinéraire complet avec des virgules
-          const itineraireComplet = itineraireSteps.join(", ");
+          // Construire l'itinéraire complet avec des tirets
+          const itineraireComplet = itineraireSteps.join(" - ");
           const analyse = analyzeItineraire(itineraireComplet);
           
           console.log(`Analyse itinéraire pour ${row.NOM} ${row.PRENOMS}:`, {
@@ -320,6 +320,7 @@ export function readExcelFile(file: File): Promise<MissionData[]> {
             Fonction: row.FONCTION || "",
             Courriel: row.COURIEL || "",
             Telephone: row.TELEPHONE || "",
+            "Date OM": row['Date OM'] || "",
             "Date départ": row['Date Départ'] || row['Date '] || "",
             "Heure départ": row['HEURE DEPART'] || "",
             "Heure arrivée départ": row['HEURE ARRIVE'] || "",
@@ -368,7 +369,7 @@ function sanitizeFilename(str: string): string {
 }
 
 function analyzeItineraire(itineraire: string) {
-  const villes = itineraire.split(', ').map(v => v.trim()).filter(v => v);
+  const villes = itineraire.split(' - ').map(v => v.trim()).filter(v => v);
   
   if (villes.length === 0) {
     return {
@@ -415,9 +416,9 @@ function analyzeItineraire(itineraire: string) {
   // Éliminer les doublons
   const escalesRetour = [...new Set(escalesRetourBrut)];
   
-  // Construire les itinéraires avec des virgules
-  const itineraireAller = [villeDepart, ...escalesAller, villeArrivee].join(', ');
-  const itineraireRetour = [villeArrivee, ...escalesRetour, villeDepart].join(', ');
+  // Construire les itinéraires avec des tirets
+  const itineraireAller = [villeDepart, ...escalesAller, villeArrivee].join(' - ');
+  const itineraireRetour = [villeArrivee, ...escalesRetour, villeDepart].join(' - ');
   
   return {
     villeDepart,
@@ -466,6 +467,7 @@ function createSmartMapping(excelData: Record<string, any>): Record<string, stri
   mapped["Telephone"] = excelData.Telephone || excelData.TELEPHONE || excelData.Téléphone || "";
   mapped["Tel"] = excelData.Telephone || excelData.TELEPHONE || excelData.Téléphone || "";
   
+  mapped["Date OM"] = excelData["Date OM"] || "";
   mapped["Date départ"] = excelData["Date départ"] || excelData["Date Départ"] || excelData["Date "] || "";
   mapped["Date arrivée"] = excelData["Date arrivée"] || excelData["Date Retour "] || excelData["__EMPTY"] || "";
   mapped["Date retour"] = excelData["Date arrivée"] || excelData["Date Retour "] || excelData["__EMPTY"] || "";

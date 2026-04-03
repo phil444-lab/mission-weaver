@@ -12,6 +12,7 @@ L'application lit automatiquement ces informations de votre fichier Excel et les
 - `{Téléphone}` ou `{Telephone}` ou `{Tel}` - Numéro de téléphone
 
 ### 📅 Dates et heures
+- `{Date OM}` - Date de l'ordre de mission
 - `{Date départ}` - Date de départ de la mission
 - `{Date arrivée}` ou `{Date retour}` - Date de retour de la mission
 - `{Heure départ}` - Heure de départ (aller)
@@ -25,11 +26,11 @@ L'application lit automatiquement ces informations de votre fichier Excel et les
 - `{Tous les vols}` ou `{Vols}` ou `{Numéros de vol}` - Tous les numéros de vol (ex: "(AF 804), (AF 805), (TK 1234)")
 
 ### 🗺️ Itinéraire
-- `{Itineraire}` - Itinéraire complet (ex: Paris, Cotonou, Dubai, Paris)
+- `{Itineraire}` - Itinéraire complet (ex: Paris - Cotonou - Dubai - Paris)
 - `{Ville de départ}` ou `{Ville de depart}` ou `{De}` ou `{Départ}` - Ville de départ
 - `{Ville d'arrivée}` ou `{Ville arrivée}` ou `{A}` ou `{Arrivée}` - Ville d'arrivée
-- `{Escales aller}` - Itinéraire aller complet (ex: "Cotonou, Istanbul, Dubai")
-- `{Escales retour}` - Itinéraire retour complet (ex: "Dubai, Istanbul, Cotonou")
+- `{Escales aller}` - Itinéraire aller complet (ex: "Cotonou - Istanbul - Dubai")
+- `{Escales retour}` - Itinéraire retour complet (ex: "Dubai - Istanbul - Cotonou")
 - `{Itinéraire aller}` ou `{Itineraire aller}` - Trajet aller uniquement
 - `{Itinéraire retour}` ou `{Itineraire retour}` - Trajet retour uniquement
 
@@ -68,6 +69,8 @@ Date de retour: {Date retour} à {Heure arrivée retour}
 
 Itinéraire: {Itineraire}
 Vols: {Tous les vols}
+
+Fait à Cotonou, le {Date OM}
 ```
 
 **Résultat généré :**
@@ -81,8 +84,10 @@ Téléphone: +229 12 34 56 78
 Date de départ: 24/09/2025 à 15h20
 Date de retour: 01/10/2025 à 06h00
 
-Itinéraire: Cotonou, Istanbul, Dubai, Istanbul, Cotonou
+Itinéraire: Cotonou - Istanbul - Dubai - Istanbul - Cotonou
 Vols: (TK 1234), (TK 5678), (TK 9012), (TK 3456)
+
+Fait à Cotonou, le 15/09/2025
 ```
 
 ## 📊 Structure du fichier Excel attendue
