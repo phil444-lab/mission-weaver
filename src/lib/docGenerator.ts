@@ -258,8 +258,8 @@ export function readExcelFile(file: File): Promise<MissionData[]> {
           
           console.log(`Itinéraire brut pour ${row.NOM} ${row.PRENOMS} (${itineraireSteps.length} villes):`, itineraireSteps);
           
-          // Construire l'itinéraire complet
-          const itineraireComplet = itineraireSteps.join(" → ");
+          // Construire l'itinéraire complet avec des virgules
+          const itineraireComplet = itineraireSteps.join(", ");
           const analyse = analyzeItineraire(itineraireComplet);
           
           console.log(`Analyse itinéraire pour ${row.NOM} ${row.PRENOMS}:`, {
@@ -357,7 +357,7 @@ function sanitizeFilename(str: string): string {
 }
 
 function analyzeItineraire(itineraire: string) {
-  const villes = itineraire.split(' → ').map(v => v.trim()).filter(v => v);
+  const villes = itineraire.split(', ').map(v => v.trim()).filter(v => v);
   
   if (villes.length === 0) {
     return {
@@ -404,9 +404,9 @@ function analyzeItineraire(itineraire: string) {
   // Éliminer les doublons
   const escalesRetour = [...new Set(escalesRetourBrut)];
   
-  // Construire les itinéraires
-  const itineraireAller = [villeDepart, ...escalesAller, villeArrivee].join(' → ');
-  const itineraireRetour = [villeArrivee, ...escalesRetour, villeDepart].join(' → ');
+  // Construire les itinéraires avec des virgules
+  const itineraireAller = [villeDepart, ...escalesAller, villeArrivee].join(', ');
+  const itineraireRetour = [villeArrivee, ...escalesRetour, villeDepart].join(', ');
   
   return {
     villeDepart,
