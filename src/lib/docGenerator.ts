@@ -62,6 +62,44 @@ function formatDateToFrench(dateStr: string): string {
   return dateStr;
 }
 
+function formatDateToFrenchLong(dateStr: string): string {
+  if (!dateStr || dateStr.trim() === "") return "";
+  
+  const monthNames = [
+    "janvier", "février", "mars", "avril", "mai", "juin",
+    "juillet", "août", "septembre", "octobre", "novembre", "décembre"
+  ];
+  
+  // Si c'est déjà au format français long, le retourner tel quel
+  if (/^\d{1,2}\s+\w+\s+\d{4}$/.test(dateStr)) {
+    return dateStr;
+  }
+  
+  let date: Date;
+  
+  // Si c'est un nombre Excel (nombre de jours depuis 1900-01-01)
+  const excelDateNumber = parseFloat(dateStr);
+  if (!isNaN(excelDateNumber) && excelDateNumber > 1000) {
+    // Convertir le nombre Excel en date (en UTC pour éviter les décalages)
+    const excelEpoch = new Date(Date.UTC(1899, 11, 30)); // Excel epoch en UTC
+    date = new Date(excelEpoch.getTime() + excelDateNumber * 86400000);
+  } else {
+    // Essayer de parser différents formats de date
+    date = new Date(dateStr);
+  }
+  
+  // Vérifier si la date est valide
+  if (!isNaN(date.getTime())) {
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const monthIndex = date.getUTCMonth();
+    const year = date.getUTCFullYear();
+    return `${day} ${monthNames[monthIndex]} ${year}`;
+  }
+  
+  // Si on ne peut pas parser, retourner la valeur originale
+  return dateStr;
+}
+
 export function readExcelFile(file: File): Promise<MissionData[]> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -320,7 +358,7 @@ export function readExcelFile(file: File): Promise<MissionData[]> {
             Fonction: row.FONCTION || "",
             Courriel: row.COURIEL || "",
             Telephone: row.TELEPHONE || "",
-            "Date OM": row['Date OM'] || "",
+            "Date OM": formatDateToFrenchLong(row['Date OM'] || ""),
             "Date départ": row['Date Départ'] || row['Date '] || "",
             "Heure départ": row['HEURE DEPART'] || "",
             "Heure arrivée départ": row['HEURE ARRIVE'] || "",

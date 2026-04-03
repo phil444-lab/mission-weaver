@@ -12,7 +12,7 @@ L'application lit automatiquement ces informations de votre fichier Excel et les
 - `{Téléphone}` ou `{Telephone}` ou `{Tel}` - Numéro de téléphone
 
 ### 📅 Dates et heures
-- `{Date OM}` - Date de l'ordre de mission
+- `{Date OM}` - Date de l'ordre de mission (format: "09 février 2024")
 - `{Date départ}` - Date de départ de la mission
 - `{Date arrivée}` ou `{Date retour}` - Date de retour de la mission
 - `{Heure départ}` - Heure de départ (aller)
@@ -87,7 +87,7 @@ Date de retour: 01/10/2025 à 06h00
 Itinéraire: Cotonou - Istanbul - Dubai - Istanbul - Cotonou
 Vols: (TK 1234), (TK 5678), (TK 9012), (TK 3456)
 
-Fait à Cotonou, le 15/09/2025
+Fait à Cotonou, le 15 septembre 2025
 ```
 
 ## 📊 Structure du fichier Excel attendue
