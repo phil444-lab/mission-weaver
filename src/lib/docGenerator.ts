@@ -505,7 +505,7 @@ function createSmartMapping(excelData: Record<string, any>): Record<string, stri
   mapped["Telephone"] = excelData.Telephone || excelData.TELEPHONE || excelData.Téléphone || "";
   mapped["Tel"] = excelData.Telephone || excelData.TELEPHONE || excelData.Téléphone || "";
   
-  mapped["Date OM"] = excelData["Date OM"] || "";
+  mapped["Date OM"] = formatDateToFrenchLong(excelData["Date OM"] || "");
   mapped["Date départ"] = excelData["Date départ"] || excelData["Date Départ"] || excelData["Date "] || "";
   mapped["Date arrivée"] = excelData["Date arrivée"] || excelData["Date Retour "] || excelData["__EMPTY"] || "";
   mapped["Date retour"] = excelData["Date arrivée"] || excelData["Date Retour "] || excelData["__EMPTY"] || "";
