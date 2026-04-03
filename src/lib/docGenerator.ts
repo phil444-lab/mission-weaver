@@ -298,6 +298,11 @@ export function readExcelFile(file: File): Promise<MissionData[]> {
           const volsAller = vols.slice(0, milieu);
           const volsRetour = vols.slice(milieu);
           
+          // Formater les vols avec des parenthèses
+          const formatVols = (volsList: string[]) => {
+            return volsList.map(vol => `(${vol})`).join(', ');
+          };
+          
           const formattedRow: MissionData = {
             Nom: row.NOM || "",
             Prenoms: row.PRENOMS || "",
@@ -311,9 +316,9 @@ export function readExcelFile(file: File): Promise<MissionData[]> {
             "Heure départ retour": row['HEURE DEPART_1'] || "",
             "Heure arrivée retour": row['HEURE ARRIVE_1'] || "",
             Itineraire: itineraireComplet,
-            "Vols aller": volsAller.join(', '),
-            "Vols retour": volsRetour.join(', '),
-            "Tous les vols": vols.join(', '),
+            "Vols aller": formatVols(volsAller),
+            "Vols retour": formatVols(volsRetour),
+            "Tous les vols": formatVols(vols),
             // Ajouter les informations d'analyse
             "Ville de départ": analyse.villeDepart,
             "Ville d'arrivée": analyse.villeArrivee,

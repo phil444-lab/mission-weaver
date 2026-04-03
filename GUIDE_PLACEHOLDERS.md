@@ -20,9 +20,9 @@ L'application lit automatiquement ces informations de votre fichier Excel et les
 - `{Heure arrivée retour}` - Heure d'arrivée (retour)
 
 ### ✈️ Informations de vol
-- `{Vols aller}` - Numéros de vol pour l'aller
-- `{Vols retour}` - Numéros de vol pour le retour
-- `{Tous les vols}` ou `{Vols}` ou `{Numéros de vol}` - Tous les numéros de vol
+- `{Vols aller}` - Numéros de vol pour l'aller (ex: "(AF 804), (TK 1234)")
+- `{Vols retour}` - Numéros de vol pour le retour (ex: "(AF 805), (TK 5678)")
+- `{Tous les vols}` ou `{Vols}` ou `{Numéros de vol}` - Tous les numéros de vol (ex: "(AF 804), (AF 805), (TK 1234)")
 
 ### 🗺️ Itinéraire
 - `{Itineraire}` - Itinéraire complet (ex: Paris → Cotonou → Dubai → Paris)
@@ -68,6 +68,21 @@ Date de retour: {Date retour} à {Heure arrivée retour}
 
 Itinéraire: {Itineraire}
 Vols: {Tous les vols}
+```
+
+**Résultat généré :**
+```
+Nom: AGBO
+Prénoms: Coffi Angelos
+Fonction: Consultant
+Email: agbo@example.com
+Téléphone: +229 12 34 56 78
+
+Date de départ: 24/09/2025 à 15h20
+Date de retour: 01/10/2025 à 06h00
+
+Itinéraire: Cotonou → Istanbul → Dubai → Istanbul → Cotonou
+Vols: (TK 1234), (TK 5678), (TK 9012), (TK 3456)
 ```
 
 ## 📊 Structure du fichier Excel attendue
