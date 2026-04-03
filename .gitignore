@@ -27,3 +27,6 @@ dist-ssr
 *.xlsx
 *.docx
 test-*.js
+
+# Lock files
+.~lock.*

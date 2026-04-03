@@ -7,10 +7,20 @@ import { saveAs } from "file-saver";
 export interface MissionData {
   Nom: string;
   Prenoms: string;
+  Fonction?: string;
+  Courriel?: string;
+  Telephone?: string;
   "Date départ": string;
+  "Heure départ"?: string;
+  "Heure arrivée départ"?: string;
   "Date arrivée": string;
+  "Heure départ retour"?: string;
+  "Heure arrivée retour"?: string;
   Itineraire: string;
-  [key: string]: string;
+  "Vols aller"?: string;
+  "Vols retour"?: string;
+  "Tous les vols"?: string;
+  [key: string]: string | undefined;
 }
 
 function formatDateToFrench(dateStr: string): string {
@@ -274,12 +284,36 @@ export function readExcelFile(file: File): Promise<MissionData[]> {
             }
           });
           
+          // Extraire les numéros de vol
+          const vols = [];
+          for (let i = 1; i <= 5; i++) {
+            const volKey = `N VOL ${i}`;
+            if (row[volKey] && String(row[volKey]).trim() !== '') {
+              vols.push(String(row[volKey]).trim());
+            }
+          }
+          
+          // Séparer les vols aller et retour (approximation: première moitié = aller, deuxième = retour)
+          const milieu = Math.ceil(vols.length / 2);
+          const volsAller = vols.slice(0, milieu);
+          const volsRetour = vols.slice(milieu);
+          
           const formattedRow: MissionData = {
             Nom: row.NOM || "",
             Prenoms: row.PRENOMS || "",
-            "Date départ": row['Date '] || "",
-            "Date arrivée": dateArrivee,
+            Fonction: row.FONCTION || "",
+            Courriel: row.COURIEL || "",
+            Telephone: row.TELEPHONE || "",
+            "Date départ": row['Date Départ'] || row['Date '] || "",
+            "Heure départ": row['HEURE DEPART'] || "",
+            "Heure arrivée départ": row['HEURE ARRIVE'] || "",
+            "Date arrivée": row['Date Retour '] || dateArrivee,
+            "Heure départ retour": row['HEURE DEPART_1'] || "",
+            "Heure arrivée retour": row['HEURE ARRIVE_1'] || "",
             Itineraire: itineraireComplet,
+            "Vols aller": volsAller.join(', '),
+            "Vols retour": volsRetour.join(', '),
+            "Tous les vols": vols.join(', '),
             // Ajouter les informations d'analyse
             "Ville de départ": analyse.villeDepart,
             "Ville d'arrivée": analyse.villeArrivee,
@@ -393,7 +427,7 @@ function normalizeKey(key: string): string {
     .replace(/[\u0300-\u036f]/g, ""); // Enlever les accents
 }
 
-function createSmartMapping(excelData: Record<string, string>): Record<string, string> {
+function createSmartMapping(excelData: Record<string, any>): Record<string, string> {
   const mapped: Record<string, string> = {};
   
   // Copier toutes les colonnes Excel
@@ -404,8 +438,30 @@ function createSmartMapping(excelData: Record<string, string>): Record<string, s
   // Créer des alias standards pour les placeholders Word
   mapped["Nom"] = excelData.Nom || excelData.NOM || "";
   mapped["Prenoms"] = excelData.Prenoms || excelData.PRENOMS || "";
-  mapped["Date départ"] = excelData["Date départ"] || excelData["Date "] || "";
-  mapped["Date arrivée"] = excelData["Date arrivée"] || excelData["__EMPTY"] || "";
+  mapped["Fonction"] = excelData.Fonction || excelData.FONCTION || "";
+  mapped["Courriel"] = excelData.Courriel || excelData.COURIEL || "";
+  mapped["Couriel"] = excelData.Courriel || excelData.COURIEL || "";
+  mapped["Email"] = excelData.Courriel || excelData.COURIEL || "";
+  mapped["Téléphone"] = excelData.Telephone || excelData.TELEPHONE || excelData.Téléphone || "";
+  mapped["Telephone"] = excelData.Telephone || excelData.TELEPHONE || excelData.Téléphone || "";
+  mapped["Tel"] = excelData.Telephone || excelData.TELEPHONE || excelData.Téléphone || "";
+  
+  mapped["Date départ"] = excelData["Date départ"] || excelData["Date Départ"] || excelData["Date "] || "";
+  mapped["Date arrivée"] = excelData["Date arrivée"] || excelData["Date Retour "] || excelData["__EMPTY"] || "";
+  mapped["Date retour"] = excelData["Date arrivée"] || excelData["Date Retour "] || excelData["__EMPTY"] || "";
+  
+  mapped["Heure départ"] = excelData["Heure départ"] || excelData["HEURE DEPART"] || "";
+  mapped["Heure arrivée départ"] = excelData["Heure arrivée départ"] || excelData["HEURE ARRIVE"] || "";
+  mapped["Heure départ retour"] = excelData["Heure départ retour"] || excelData["HEURE DEPART_1"] || "";
+  mapped["Heure arrivée retour"] = excelData["Heure arrivée retour"] || excelData["HEURE ARRIVE_1"] || "";
+  mapped["Heure retour"] = excelData["Heure départ retour"] || excelData["HEURE DEPART_1"] || "";
+  
+  mapped["Vols aller"] = excelData["Vols aller"] || "";
+  mapped["Vols retour"] = excelData["Vols retour"] || "";
+  mapped["Tous les vols"] = excelData["Tous les vols"] || "";
+  mapped["Vols"] = excelData["Tous les vols"] || "";
+  mapped["Numéros de vol"] = excelData["Tous les vols"] || "";
+  
   mapped["Itineraire"] = excelData.Itineraire || "";
   
   // Analyser l'itinéraire pour extraire les détails
