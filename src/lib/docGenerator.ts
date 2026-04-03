@@ -77,22 +77,30 @@ function formatDateToFrenchLong(dateStr: string): string {
   
   let date: Date;
   
-  // Si c'est un nombre Excel (nombre de jours depuis 1900-01-01)
+  // Vérifier si c'est un nombre Excel pur (uniquement des chiffres, éventuellement avec un point décimal)
+  const isExcelNumber = /^\d+(\.\d+)?$/.test(dateStr.trim());
   const excelDateNumber = parseFloat(dateStr);
-  if (!isNaN(excelDateNumber) && excelDateNumber > 1000) {
+  
+  if (isExcelNumber && !isNaN(excelDateNumber) && excelDateNumber > 1000) {
     // Convertir le nombre Excel en date (en UTC pour éviter les décalages)
     const excelEpoch = new Date(Date.UTC(1899, 11, 30)); // Excel epoch en UTC
     date = new Date(excelEpoch.getTime() + excelDateNumber * 86400000);
   } else {
     // Essayer de parser différents formats de date
-    date = new Date(dateStr);
+    // Gérer le format français DD/MM/YYYY
+    if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateStr)) {
+      const [day, month, year] = dateStr.split('/').map(Number);
+      date = new Date(year, month - 1, day); // month - 1 car les mois sont indexés à partir de 0
+    } else {
+      date = new Date(dateStr);
+    }
   }
   
   // Vérifier si la date est valide
   if (!isNaN(date.getTime())) {
-    const day = String(date.getUTCDate()).padStart(2, '0');
-    const monthIndex = date.getUTCMonth();
-    const year = date.getUTCFullYear();
+    const day = String(date.getDate()).padStart(2, '0');
+    const monthIndex = date.getMonth();
+    const year = date.getFullYear();
     return `${day} ${monthNames[monthIndex]} ${year}`;
   }
   
