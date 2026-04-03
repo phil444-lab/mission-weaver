@@ -293,6 +293,17 @@ export function readExcelFile(file: File): Promise<MissionData[]> {
             }
           }
           
+          // Vérifier aussi __EMPTY qui pourrait être N VOL 6 (colonne T sans en-tête)
+          if (row['__EMPTY'] && String(row['__EMPTY']).trim() !== '') {
+            const emptyValue = String(row['__EMPTY']).trim();
+            // Vérifier si c'est un numéro de vol (pattern: 2 lettres + espace + chiffres)
+            const volPattern = /^[A-Z]{2}\s*\d+$/;
+            if (volPattern.test(emptyValue)) {
+              vols.push(emptyValue);
+              console.log(`N VOL 6 trouvé dans __EMPTY: ${emptyValue}`);
+            }
+          }
+          
           // Séparer les vols aller et retour (approximation: première moitié = aller, deuxième = retour)
           const milieu = Math.ceil(vols.length / 2);
           const volsAller = vols.slice(0, milieu);

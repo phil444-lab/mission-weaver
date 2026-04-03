@@ -104,7 +104,7 @@ Votre fichier Excel doit contenir ces colonnes :
 - **Date Retour** - Date de retour
 - **HEURE DEPART_1** - Heure de départ (retour)
 - **HEURE ARRIVE_1** - Heure d'arrivée (retour)
-- **N VOL 1** à **N VOL 6** - Numéros de vol
+- **N VOL 1** à **N VOL 6** - Numéros de vol (N VOL 6 peut être dans une colonne sans en-tête)
 - **Intinéraire** + colonnes suivantes - Villes de l'itinéraire
 
 ## 🔄 Aliases disponibles
