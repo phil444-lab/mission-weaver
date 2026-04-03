@@ -284,9 +284,9 @@ export function readExcelFile(file: File): Promise<MissionData[]> {
             }
           });
           
-          // Extraire les numéros de vol
+          // Extraire les numéros de vol (N VOL 1 à N VOL 6)
           const vols = [];
-          for (let i = 1; i <= 5; i++) {
+          for (let i = 1; i <= 6; i++) {
             const volKey = `N VOL ${i}`;
             if (row[volKey] && String(row[volKey]).trim() !== '') {
               vols.push(String(row[volKey]).trim());
